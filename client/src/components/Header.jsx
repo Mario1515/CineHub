@@ -2,17 +2,26 @@ import React, { useEffect, useState } from 'react'
 import logo from '../assets/logo.png'
 import { BiSolidMoviePlay } from "react-icons/bi";
 import { PiTelevisionFill } from "react-icons/pi";
-import { Link, NavLink,   } from 'react-router-dom'
+import { IoSearchOutline } from "react-icons/io5";
+import { Link, NavLink, useNavigate} from 'react-router-dom'
 import userIcon from '../assets/user.png'
 
 const Header = () => {
 
+    const navigate = useNavigate()
+
+    const [searchInput,setSearchInput] = useState("")
+
     
-    const [searchInput,setSearchInput] = useState()
+    useEffect(()=>{
+        if(searchInput) navigate(`/search?q=${searchInput}`)
+    },[searchInput])
+
 
     const handleSubmit = (e)=>{
         e.preventDefault()
     }
+
 
   return (
     <header className="fixed top-0 w-full h-16 bg-black bg-opacity-50 z-40">
@@ -56,7 +65,7 @@ const Header = () => {
               value={searchInput}
             />
             <button className="text-2xl text-white">
-              {/* <IoSearchOutline/> */}
+              <IoSearchOutline/>
             </button>
           </form>
 

@@ -6,6 +6,7 @@ import SearchPage from "./pages/SearchPage";
 import ErrorPage from "./pages/ErrorPage";
 import Header from "./components/Header"
 import Footer from "./components/Footer"
+import MobileNav from "./components/MobileNav";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
       </Routes>
       </div>
       <Footer />
+      <MobileNav/>
     </>
   )
 }
