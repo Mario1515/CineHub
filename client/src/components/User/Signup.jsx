@@ -2,40 +2,74 @@ import React from 'react';
 import {createRef, useState} from "react";
 import {Link} from "react-router-dom";
 import axiosClient from '../../hooks/useAxios';
+import { AuthContext, useAuthContext } from '../../contexts/AuthProvider';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Loader from '../Loader'; 
+
 
 const Signup = () => {
 
-  const usernameRef = createRef()
+  const navigate = useNavigate()
+  const {setUser, setToken} = useAuthContext()
+  const [message, setMessage] = useState(null)
+  const [loading, setLoading] = useState(false); // State for loader
+
+  const nameRef = createRef()
   const emailRef = createRef()
   const passwordRef = createRef()
   const passwordConfirmRef = createRef()
 
   const onSubmit = async  (e) => {
     e.preventDefault();
+    setLoading(true); // Show loader
 
     const payload = {
-      name: usernameRef.current.value,
+      name: nameRef.current.value,
       email: emailRef.current.value,
       password: passwordRef.current.value,
-      passwordConfirm: passwordConfirmRef.current.value,
+      password_confirmation: passwordConfirmRef.current.value,
     }
 
-    console.log(payload);
+    // console.log(`This is what we sent to server ` + JSON.stringify(payload))
+
+    axiosClient.post('/signup', payload)
+      .then(({data}) => {
+        setUser(data.user)
+        setToken(data.token);
+        navigate(`/explore`)
+      })
+      .catch(err => {
+        console.log(err);
+        const response = err.response;
+        if (response && response.status === 422) {
+          setMessage(response.data.message);
+        }
+      })
+      .finally(() => {
+        setLoading(false); // Hide loader
+      });
 
   }
 
   return (
     <div className="bg-neutral-900 text-neutral-300 min-h-screen flex items-center justify-center">
       <div className="form-container max-w-md w-full bg-neutral-800 p-8 rounded-lg shadow-lg">
+      {loading && <Loader />} {/* Show loader when loading */}
         <h2 className="text-2xl font-bold mb-6">Sign Up</h2>
+        {message && (
+          <div className="mb-4 p-4 bg-red-500 text-white rounded-lg shadow-md transition-opacity duration-500 ease-in-out opacity-100">
+            {message}
+          </div>
+        )}
         <form onSubmit={onSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-sm font-medium mb-1">Username</label>
+            <label htmlFor="name" className="block text-sm font-medium mb-1">Username</label>
             <input
-              ref={usernameRef}
+              ref={nameRef}
               type="text"
-              id="username"
-              name="username"
+              id="name"
+              name="name"
               className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500"
               placeholder="Enter your username"
               required

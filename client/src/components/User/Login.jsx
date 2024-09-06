@@ -1,36 +1,60 @@
-import React from 'react';
-import {Link} from "react-router-dom";
+import React, { createRef, useState } from 'react';
+import { Link } from "react-router-dom";
 import axiosClient from '../../hooks/useAxios';
-import {createRef} from "react";
-import { useState } from "react";
-
+import { useAuthContext } from '../../contexts/AuthProvider';
+import { useNavigate } from 'react-router-dom';
+import Loader from '../Loader'; 
 
 const Login = () => {
+  const navigate = useNavigate()
 
-  const emailRef = createRef()
-  const passwordRef = createRef()
+  const { setUser, setToken } = useAuthContext();
+  const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false); // State for loader
 
-  const onSubmit = async  (e) => {
+  const emailRef = createRef();
+  const passwordRef = createRef();
+
+  const onSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Show loader
 
     const payload = {
       email: emailRef.current.value,
       password: passwordRef.current.value,
-    }
+    };
 
-    console.log(payload);
+    axiosClient.post('/login', payload)
+    .then(({data}) => {
+      setUser(data.user)
+      setToken(data.token);
+      navigate("/explore");
+    })
+    .catch((err) => {
+      const response = err.response;
+      if (response && response.status === 422) {
+        setMessage(response.data.message)
+      }
+    }).finally(()=> {
+      setLoading(false);
+    })
 
-  }
-
+  };
   return (
-    <div className="bg-neutral-900 text-neutral-300 min-h-screen flex items-center justify-center">
+    <div className="relative bg-neutral-900 text-neutral-300 min-h-screen flex items-center justify-center">
       <div className="form-container max-w-md w-full bg-neutral-800 p-8 rounded-lg shadow-lg">
+       {loading && <Loader />} {/* Show loader when loading */}
         <h2 className="text-2xl font-bold mb-6">Log In</h2>
+        {message && (
+          <div className="mb-4 p-4 bg-red-500 text-white rounded-lg shadow-md transition-opacity duration-500 ease-in-out opacity-100">
+            {message}
+          </div>
+        )}
         <form onSubmit={onSubmit}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
             <input
-             ref={emailRef}
+              ref={emailRef}
               type="email"
               id="email"
               name="email"
@@ -42,7 +66,7 @@ const Login = () => {
           <div className="mb-6">
             <label htmlFor="password" className="block text-sm font-medium mb-1">Password</label>
             <input
-               ref={passwordRef}
+              ref={passwordRef}
               type="password"
               id="password"
               name="password"

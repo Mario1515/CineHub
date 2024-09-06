@@ -1,27 +1,47 @@
-import React, { useEffect, useState } from 'react'
-import logo from '../assets/logo.png'
-import { BiSolidMoviePlay } from "react-icons/bi";
-import { PiTelevisionFill } from "react-icons/pi";
+import React, { useEffect, useState } from 'react';
+import logo from '../assets/logo.png';
 import { IoSearchOutline } from "react-icons/io5";
-import { Link, NavLink, useNavigate} from 'react-router-dom'
-import userIcon from '../assets/user.png'
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import userIcon from '../assets/user.png';
+import { useAuthContext } from '../contexts/AuthProvider';
+import axiosClient from '../hooks/useAxios';
+import Logout from "../components/User/Logout";
+
 
 const Header = () => {
+  const navigate = useNavigate();
+  const { user, setUser, setToken, isAuthenticated } = useAuthContext();
 
-    const navigate = useNavigate()
+  const [searchInput, setSearchInput] = useState("");
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false); // State to manage dialog visibility
 
-    const [searchInput,setSearchInput] = useState("")
+  useEffect(() => {
+    if (searchInput) navigate(`/search?q=${searchInput}`);
+  }, [searchInput]);
 
-    
-    useEffect(()=>{
-        if(searchInput) navigate(`/search?q=${searchInput}`)
-    },[searchInput])
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
 
+  const handleLogoutClick = () => {
+    setShowLogoutDialog(true); // Show the confirmation dialog
+  };
 
-    const handleSubmit = (e)=>{
-        e.preventDefault()
-    }
+  const handleCloseDialog = () => {
+    setShowLogoutDialog(false); // Close the confirmation dialog
+  };
 
+  const handleConfirmLogout = () => {
+    axiosClient.post('/logout')
+    .then(() => {
+      setUser({})
+      setToken(null)
+      navigate(`/explore`)
+    }).catch(() => {
+      navigate(`/explore`)    
+      });
+    setShowLogoutDialog(false); 
+  };
 
   return (
     <header className="fixed top-0 w-full h-16 bg-black bg-opacity-50 z-40">
@@ -30,6 +50,7 @@ const Header = () => {
         <Link to={"/"}>
           <img src={logo} alt="logo" width={120} />
         </Link>
+
         {/* MOVIES AND SHOWS NAV */}
         <nav className="hidden lg:flex items-center gap-1 ml-5">
           <div>
@@ -56,7 +77,7 @@ const Header = () => {
           </div>
         </nav>
 
-        {/* SEARCH FIELD*/}
+        {/* SEARCH FIELD */}
         <div className="ml-auto flex items-center gap-5">
           <form className="flex items-center gap-2" onSubmit={handleSubmit}>
             <input
@@ -67,59 +88,65 @@ const Header = () => {
               value={searchInput}
             />
             <button className="text-2xl text-white">
-              <IoSearchOutline/>
+              <IoSearchOutline />
             </button>
           </form>
 
-          {/* USER SENCTION */}
-          {/* login */}
-            <nav className="hidden lg:flex items-center gap-1 ml-5">
-            <div>
-              <NavLink
-                to="/login"
-                className={({ isActive }) =>
-                  `px-2 hover:text-neutral-100 ${
-                    isActive ? "text-neutral-100" : ""
-                  }`
-                }
-              > Login
-              </NavLink>
-            </div>
-              {/* signup */}
-            <div>
-              <NavLink
-                to="/signup"
-                className={({ isActive }) =>
-                  `px-2 hover:text-neutral-100 ${
-                    isActive ? "text-neutral-100" : ""
-                  }`
-                }
-              >Signup
-              </NavLink>
-            </div>
-            {/* logout*/}
-            <div>
-              <NavLink
-                to="/logout"
-                className={({ isActive }) =>
-                  `px-2 hover:text-neutral-100 ${
-                    isActive ? "text-neutral-100" : ""
-                  }`
-                }
-              >Logout
-              </NavLink>
-            </div>
-        </nav>
-
+          {/* USER SECTION */}
+          {isAuthenticated ? (
+            <>
               {/* User Profile */}
-          <div className="w-8 h-8 rounded-full overflow-hidden cursor-pointer active:scale-50 transition-all">
-            <img src={userIcon} width="w-ful h-full" />
-          </div>
-
+              <div className="w-8 h-8 rounded-full overflow-hidden cursor-pointer active:scale-50 transition-all">
+                <img src={userIcon} className="w-full h-full" alt="User Profile" />
+              </div>
+              {/* Logout */}
+              <div>
+                <button
+                  className="px-2 hover:text-neutral-100"
+                  onClick={handleLogoutClick}
+                >
+                  Logout
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Login */}
+              <div>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    `px-2 hover:text-neutral-100 ${
+                      isActive ? "text-neutral-100" : ""
+                    }`
+                  }
+                >Login
+                </NavLink>
+              </div>
+              {/* Signup */}
+              <div>
+                <NavLink
+                  to="/signup"
+                  className={({ isActive }) =>
+                    `px-2 hover:text-neutral-100 ${
+                      isActive ? "text-neutral-100" : ""
+                    }`
+                  }
+                >Signup
+                </NavLink>
+              </div>
+            </>
+          )}
         </div>
       </div>
+      
+  {/* Confirmation Dialog */}
+    <Logout
+        showLogoutDialog={showLogoutDialog}
+        handleCloseDialog={handleCloseDialog}
+      />
     </header>
   );
-}
+};
 
-export default Header
+export default Header;
