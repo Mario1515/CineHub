@@ -26,9 +26,11 @@ const Header = () => {
   return (
     <header className="fixed top-0 w-full h-16 bg-black bg-opacity-50 z-40">
       <div className="container mx-auto px-3 flex items-center h-full">
+        {/* LOGO */}
         <Link to={"/"}>
           <img src={logo} alt="logo" width={120} />
         </Link>
+        {/* MOVIES AND SHOWS NAV */}
         <nav className="hidden lg:flex items-center gap-1 ml-5">
           <div>
             <NavLink
@@ -41,7 +43,6 @@ const Header = () => {
             > TV Shows
             </NavLink>
           </div>
-
           <div>
             <NavLink
               to="movie"
@@ -55,6 +56,7 @@ const Header = () => {
           </div>
         </nav>
 
+        {/* SEARCH FIELD*/}
         <div className="ml-auto flex items-center gap-5">
           <form className="flex items-center gap-2" onSubmit={handleSubmit}>
             <input
@@ -69,9 +71,51 @@ const Header = () => {
             </button>
           </form>
 
+          {/* USER SENCTION */}
+          {/* login */}
+            <nav className="hidden lg:flex items-center gap-1 ml-5">
+            <div>
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  `px-2 hover:text-neutral-100 ${
+                    isActive ? "text-neutral-100" : ""
+                  }`
+                }
+              > Login
+              </NavLink>
+            </div>
+              {/* signup */}
+            <div>
+              <NavLink
+                to="/signup"
+                className={({ isActive }) =>
+                  `px-2 hover:text-neutral-100 ${
+                    isActive ? "text-neutral-100" : ""
+                  }`
+                }
+              >Signup
+              </NavLink>
+            </div>
+            {/* logout*/}
+            <div>
+              <NavLink
+                to="/logout"
+                className={({ isActive }) =>
+                  `px-2 hover:text-neutral-100 ${
+                    isActive ? "text-neutral-100" : ""
+                  }`
+                }
+              >Logout
+              </NavLink>
+            </div>
+        </nav>
+
+              {/* User Profile */}
           <div className="w-8 h-8 rounded-full overflow-hidden cursor-pointer active:scale-50 transition-all">
             <img src={userIcon} width="w-ful h-full" />
           </div>
+
         </div>
       </div>
     </header>
