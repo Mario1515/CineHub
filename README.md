@@ -1,2 +1,0 @@
-# cineHub
- A streaming service
