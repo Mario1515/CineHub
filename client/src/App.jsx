@@ -50,7 +50,7 @@ function App() {
               <Routes>
               <Route path="/" exact element={<Home />} />
               <Route path="/:explore" element={<ExplorePage />} />
-              <Route path="/explore:id" exact element={<DetailsPage />} />
+              <Route path="/:explore/:id" exact element={<DetailsPage />} />
               <Route path="/signup" exact element={<Signup />} />
               <Route path="/login" exact element={<Login />} />
               {/* <Route path="/logout" exact element={<Logout />} /> */}
