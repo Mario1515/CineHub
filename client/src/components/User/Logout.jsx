@@ -17,10 +17,10 @@ const Logout = ({ showLogoutDialog, handleCloseDialog }) => {
       .then(() => {
         setUser({});
         setToken(null);
-        navigate(`/explore`);
+        navigate(`/`);
       })
       .catch(() => {
-        navigate(`/explore`);
+        navigate(`/`);
       }).finally(()=> {
         setLoading(false);
         handleCloseDialog(); // Close the dialog after logout

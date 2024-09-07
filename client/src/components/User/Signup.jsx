@@ -37,7 +37,7 @@ const Signup = () => {
       .then(({data}) => {
         setUser(data.user)
         setToken(data.token);
-        navigate(`/explore`)
+        navigate(`/`)
       })
       .catch(err => {
         console.log(err);
