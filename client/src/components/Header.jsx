@@ -5,6 +5,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import userIcon from '../assets/user.png';
 import { useAuthContext } from '../contexts/AuthProvider';
 import axiosClient from '../hooks/useAxios';
+// import { navigation } from '../constants/navigation';
 import Logout from "../components/User/Logout";
 
 
@@ -31,17 +32,6 @@ const Header = () => {
     setShowLogoutDialog(false); // Close the confirmation dialog
   };
 
-  const handleConfirmLogout = () => {
-    axiosClient.post('/logout')
-    .then(() => {
-      setUser({})
-      setToken(null)
-      navigate(`/explore`)
-    }).catch(() => {
-      navigate(`/explore`)    
-      });
-    setShowLogoutDialog(false); 
-  };
 
   return (
     <header className="fixed top-0 w-full h-16 bg-black bg-opacity-50 z-40">
@@ -52,9 +42,12 @@ const Header = () => {
         </Link>
 
         {/* MOVIES AND SHOWS NAV */}
+
+
         <nav className="hidden lg:flex items-center gap-1 ml-5">
           <div>
             <NavLink
+              href="tv"
               to="tv"
               className={({ isActive }) =>
                 `px-2 hover:text-neutral-100 ${
@@ -75,7 +68,7 @@ const Header = () => {
             >Movies
             </NavLink>
           </div>
-        </nav>
+        </nav> 
 
         {/* SEARCH FIELD */}
         <div className="ml-auto flex items-center gap-5">
