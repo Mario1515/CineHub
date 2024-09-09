@@ -15,6 +15,12 @@ The aim of CineHub is to offer users a comprehensive streaming service with the 
 - **Laravel**: A PHP framework that simplifies backend development and provides robust features for building modern applications.
 - **MySQL**: A relational database management system used to store and manage the application’s data.
 
+## Preview 
+
+![image](https://github.com/user-attachments/assets/21c7d58b-c49a-4150-8150-7b92ca58e988)
+![image](https://github.com/user-attachments/assets/fcc90c0a-6cc9-41db-990f-41c87d950494)
+![image](https://github.com/user-attachments/assets/ca2042c4-8bee-48b6-8ca8-d1a11b71361c)
+
 ## Installation 
 
 Before you begin, ensure you have the following installed on your machine:
@@ -25,17 +31,17 @@ Before you begin, ensure you have the following installed on your machine:
 - **Composer** (for Laravel dependencies)
 - **MySQL** or another compatible database
 
-- Follow these steps to set up and run the project:
+Follow these steps to set up and run the project:
 
 - `git clone https://github.com/Mario1515/cineHub.git`
 - `cd cinehub`
-- 
-  ### Client Setup
+
+#### Client Setup
 - `cd client`
 - `cd npm install`
 - `npm run dev`
 
- ### Server Setup
+#### Server Setup
 - `cd server`
 - `php artisan key:generate`
 - Setup your DB credentials in the `.env` file
